@@ -18,7 +18,7 @@ class BIRD:
         self.x = random.randint(200, 1400)
         self.y = random.randint(300, 500)
         self.frame = 0
-        self.face_dir = 1 #1오-1왼
+        self.face_dir = -1 #1오-1왼
         self.dir = 1  #1오-1왼
 
         if BIRD.image == None:
@@ -26,11 +26,14 @@ class BIRD:
 
     def draw(self):
         if int(self.frame) < 5:
-            self.image.clip_draw(int(self.frame) * 181, 338, 185, 168, self.x, self.y)
+            if self.face_dir == 1 : self.image.clip_draw(int(self.frame) * 181, 338, 180, 165, self.x, self.y)
+            elif self.face_dir == -1: self.image.clip_composite_draw(int(self.frame) * 181, 338, 180, 165, 0,'h',self.x, self.y,180,165)
         elif int(self.frame) < 10:
-            self.image.clip_draw((int(self.frame) - 5) * 181 , 169, 185, 168, self.x, self.y)
+            if self.face_dir == 1 : self.image.clip_draw((int(self.frame) - 5) * 181 , 169, 180, 165, self.x, self.y)
+            elif self.face_dir == -1: self.image.clip_composite_draw(int(self.frame - 5) * 181, 169, 180, 165, 0,'h',self.x, self.y,180,165)
         else:
-            self.image.clip_draw((int(self.frame) - 10) * 181 , 0, 185, 168, self.x, self.y)
+            if self.face_dir == 1 : self.image.clip_draw((int(self.frame) - 10) * 181 , 0, 180, 165, self.x, self.y)
+            elif self.face_dir == -1: self.image.clip_composite_draw(int(self.frame - 10) * 181, 0, 180, 165, 0,'h',self.x, self.y,180,165)
 
     def update(self):
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 14
