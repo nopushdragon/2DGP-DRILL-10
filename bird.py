@@ -2,7 +2,6 @@ from pico2d import *
 import game_framework
 import random
 
-
 BIRD_WIDTH = 50
 BIRD_HEIGHT = 50
 
