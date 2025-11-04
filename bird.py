@@ -2,6 +2,10 @@ from pico2d import *
 import game_framework
 import random
 
+
+BIRD_WIDTH = 50
+BIRD_HEIGHT = 50
+
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
 FLY_SPEED_KMPH = 20.0  # Km / Hour
 FLY_SPEED_MPM = (FLY_SPEED_KMPH * 1000.0 / 60.0)
@@ -17,8 +21,8 @@ class BIRD:
     def __init__(self):
         self.x = random.randint(200, 1400)
         self.y = random.randint(300, 500)
-        self.frame = 0
-        self.face_dir = -1 #1오-1왼
+        self.frame = random.randint(0, FRAMES_PER_ACTION)
+        self.face_dir = 1 #1오-1왼
         self.dir = 1  #1오-1왼
 
         if BIRD.image == None:
@@ -26,16 +30,21 @@ class BIRD:
 
     def draw(self):
         if int(self.frame) < 5:
-            if self.face_dir == 1 : self.image.clip_draw(int(self.frame) * 181, 338, 180, 165, self.x, self.y)
-            elif self.face_dir == -1: self.image.clip_composite_draw(int(self.frame) * 181, 338, 180, 165, 0,'h',self.x, self.y,180,165)
+            if self.face_dir == 1 : self.image.clip_draw(int(self.frame) * 181, 338, 180, 165, self.x, self.y,BIRD_WIDTH,BIRD_HEIGHT)
+            elif self.face_dir == -1: self.image.clip_composite_draw(int(self.frame) * 181, 338, 180, 165, 0,'h',self.x, self.y,BIRD_WIDTH,BIRD_HEIGHT)
         elif int(self.frame) < 10:
-            if self.face_dir == 1 : self.image.clip_draw((int(self.frame) - 5) * 181 , 169, 180, 165, self.x, self.y)
-            elif self.face_dir == -1: self.image.clip_composite_draw(int(self.frame - 5) * 181, 169, 180, 165, 0,'h',self.x, self.y,180,165)
+            if self.face_dir == 1 : self.image.clip_draw((int(self.frame) - 5) * 181 , 169, 180, 165, self.x, self.y,BIRD_WIDTH,BIRD_HEIGHT)
+            elif self.face_dir == -1: self.image.clip_composite_draw(int(self.frame - 5) * 181, 169, 180, 165, 0,'h',self.x, self.y,BIRD_WIDTH,BIRD_HEIGHT)
         else:
-            if self.face_dir == 1 : self.image.clip_draw((int(self.frame) - 10) * 181 , 0, 180, 165, self.x, self.y)
-            elif self.face_dir == -1: self.image.clip_composite_draw(int(self.frame - 10) * 181, 0, 180, 165, 0,'h',self.x, self.y,180,165)
+            if self.face_dir == 1 : self.image.clip_draw((int(self.frame) - 10) * 181 , 0, 180, 165, self.x, self.y,BIRD_WIDTH,BIRD_HEIGHT)
+            elif self.face_dir == -1: self.image.clip_composite_draw(int(self.frame - 10) * 181, 0, 180, 165, 0,'h',self.x, self.y,BIRD_WIDTH,BIRD_HEIGHT)
 
     def update(self):
         self.frame = (self.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 14
-
-        pass
+        self.x += self.dir * FLY_SPEED_PPS * game_framework.frame_time
+        if self.x >= 1600:
+            self.dir = -1
+            self.face_dir = -1
+        elif self.x <= 0:
+            self.dir = 1
+            self.face_dir = 1

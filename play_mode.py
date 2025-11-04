@@ -33,8 +33,8 @@ def init():
     boy = Boy()
     game_world.add_object(boy, 1)
 
-    bird = BIRD()
-    game_world.add_object(bird, 1)
+    birds = [BIRD() for _ in range(10)]
+    game_world.add_objects(birds, 1)
 
 def update():
     game_world.update()
